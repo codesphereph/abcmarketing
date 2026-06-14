@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>ABC Marketing</title>
+
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ABC Marketing">
+  <meta name="application-name" content="ABC Marketing">
+  <meta name="theme-color" content="#0d1424">
+  <meta name="description" content="ABC Marketing — Centralized Operations Management System. Grow your income through digital transformation.">
+  <meta name="msapplication-TileImage" content="icon-192.png">
+  <meta name="msapplication-TileColor" content="#0d1424">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta property="og:title"       content="ABC Marketing">
+  <meta property="og:description" content="Centralized Operations Management System — grow your income through digital transformation.">
+  <meta property="og:type"        content="website">
+  <meta property="og:image"       content="icon-512.png">
+  <meta name="twitter:card"       content="summary">
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:#0d1424;width:100vw;height:100vh;overflow:hidden;
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;}
+
+    /* ── SPLASH ── */
+    #splash{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;padding:24px;transition:opacity .6s ease;
+      background:
+        radial-gradient(700px 480px at 82% -8%, rgba(52,208,232,.30), transparent 60%),
+        radial-gradient(620px 460px at -10% 110%, rgba(245,158,11,.16), transparent 60%),
+        linear-gradient(160deg,#0d1b2e,#0b1424);}
+
+    /* chart card */
+    .chart-card{width:min(82vw,300px);background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.10);border-radius:20px;padding:18px 18px 14px;
+      box-shadow:0 20px 60px rgba(0,0,0,.35);backdrop-filter:blur(6px);
+      animation:cardIn .6s cubic-bezier(.2,.9,.3,1.3) both;}
+    @keyframes cardIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+    .chart-card .cc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+    .chart-card .cc-lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#7dd3e8;}
+    .chart-card .cc-up{font-size:12px;font-weight:800;color:#34d96b;display:flex;align-items:center;gap:4px;}
+    svg.trend{display:block;width:100%;height:auto;}
+
+    .grid-line{stroke:rgba(255,255,255,.08);stroke-width:1;}
+    .area{fill:url(#areaGrad);transform-origin:bottom;animation:rise 2.6s ease infinite;}
+    @keyframes rise{0%{opacity:0;transform:scaleY(.15)}45%{opacity:1;transform:scaleY(1)}100%{opacity:1;transform:scaleY(1)}}
+    .line{fill:none;stroke:url(#lineGrad);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;
+      stroke-dasharray:640;stroke-dashoffset:640;animation:draw 2.6s ease infinite;filter:drop-shadow(0 4px 10px rgba(8,145,178,.5));}
+    @keyframes draw{0%{stroke-dashoffset:640}55%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
+    .dot{opacity:0;transform-box:fill-box;transform-origin:center;animation:pop 2.6s ease infinite;}
+    @keyframes pop{0%,42%{opacity:0;transform:scale(0)}54%{opacity:1;transform:scale(1.25)}64%{transform:scale(1)}100%{opacity:1;transform:scale(1)}}
+    .d0{animation-delay:.20s}.d1{animation-delay:.45s}.d2{animation-delay:.70s}.d3{animation-delay:.95s}.d4{animation-delay:1.15s}
+    .tip{transform-box:fill-box;transform-origin:center;animation:tip 2.6s ease infinite;}
+    @keyframes tip{0%,40%{opacity:0;transform:scale(0)}52%{opacity:1;transform:scale(1.25)}60%{transform:scale(1)}100%{opacity:1;transform:scale(1)}}
+    .tip-ring{transform-box:fill-box;transform-origin:center;animation:ring 2.6s ease-out infinite;}
+    @keyframes ring{0%,52%{opacity:.0;transform:scale(.4)}60%{opacity:.7}100%{opacity:0;transform:scale(2.4)}}
+
+    .app-name{margin-top:26px;font-weight:800;font-size:28px;letter-spacing:.2px;color:#eaf2ff;}
+    .app-name .b{color:#34d0e8;}
+    .app-sub{color:#9fb6d6;font-size:11px;font-weight:700;margin-top:8px;letter-spacing:3px;text-transform:uppercase;}
+
+    #loadbarWrap{margin-top:30px;width:184px;height:7px;border-radius:7px;background:rgba(255,255,255,.12);overflow:hidden;}
+    #loadbarWrap i{display:block;height:100%;width:42%;border-radius:7px;
+      background:linear-gradient(90deg,#0891b2,#34d0e8);animation:slide 1.2s ease-in-out infinite;}
+    @keyframes slide{0%{transform:translateX(-110%)}100%{transform:translateX(320%)}}
+
+    #openBtn{display:none;margin-top:24px;background:#0891b2;color:#fff;border:none;border-radius:100px;
+      padding:13px 26px;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 6px 0 #075e74;text-decoration:none;}
+    #splash .hint{display:none;color:rgba(159,182,214,.7);font-size:11px;margin-top:12px;}
+
+    #app-frame{position:fixed;inset:0;width:100%;height:100%;border:none;z-index:1;background:#0d1424;}
+
+    #installBanner{display:none;position:fixed;bottom:20px;left:12px;right:12px;z-index:998;
+      background:#13233a;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.4);border:1.5px solid rgba(255,255,255,.12);padding:14px 16px;align-items:center;gap:12px;}
+    #installBanner img{width:44px;height:44px;border-radius:12px;flex-shrink:0;}
+    #installBanner .ib-text{flex:1;min-width:0;}
+    #installBanner .ib-title{font-weight:800;font-size:14px;color:#eaf2ff;}
+    #installBanner .ib-sub{font-size:12px;color:#9fb6d6;margin-top:2px;}
+    #installBanner .ib-install{background:#0891b2;color:#fff;border:none;border-radius:10px;padding:9px 16px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+    #installBanner .ib-close{background:none;border:none;color:#9fb6d6;font-size:20px;cursor:pointer;padding:4px;flex-shrink:0;line-height:1;}
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SET YOUR APP URL HERE  ▼▼▼
+       Paste ABC Marketing's deployed Apps Script Web App URL (must end in /exec).
+       Apps Script ▸ Deploy ▸ New deployment ▸ Web app ▸
+       Execute as: Me ▸ Who has access: Anyone ▸ copy the /exec URL.
+       ═══════════════════════════════════════════════════════════════ -->
+  <script>
+    var APP_URL = "PASTE_YOUR_EXEC_URL_HERE";
+  </script>
+
+  <div id="splash">
+    <div class="chart-card">
+      <div class="cc-top">
+        <span class="cc-lbl">Revenue</span>
+        <span class="cc-up">▲ Growing</span>
+      </div>
+      <svg class="trend" viewBox="0 0 320 170" aria-hidden="true">
+        <defs>
+          <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#0891b2"/><stop offset="1" stop-color="#34d0e8"/>
+          </linearGradient>
+          <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="rgba(52,208,232,.34)"/><stop offset="1" stop-color="rgba(52,208,232,0)"/>
+          </linearGradient>
+        </defs>
+        <line class="grid-line" x1="10" y1="40"  x2="310" y2="40"/>
+        <line class="grid-line" x1="10" y1="85"  x2="310" y2="85"/>
+        <line class="grid-line" x1="10" y1="130" x2="310" y2="130"/>
+        <path class="area" d="M16 132 L76 96 L136 108 L196 62 L256 44 L304 22 L304 150 L16 150 Z"/>
+        <path class="line" d="M16 132 L76 96 L136 108 L196 62 L256 44 L304 22"/>
+        <circle class="dot d0" cx="16"  cy="132" r="5" fill="#fff"/>
+        <circle class="dot d1" cx="76"  cy="96"  r="5" fill="#fff"/>
+        <circle class="dot d2" cx="136" cy="108" r="5" fill="#fff"/>
+        <circle class="dot d3" cx="196" cy="62"  r="5" fill="#fff"/>
+        <circle class="dot d4" cx="256" cy="44"  r="5" fill="#fff"/>
+        <circle class="tip-ring" cx="304" cy="22" r="9"  fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+        <circle class="tip"      cx="304" cy="22" r="6.5" fill="#f59e0b"/>
+      </svg>
+    </div>
+
+    <div class="app-name">ABC <span class="b">Marketing</span></div>
+    <div class="app-sub">Operations Management System</div>
+
+    <div id="loadbarWrap"><i></i></div>
+
+    <a id="openBtn" href="#" target="_blank" rel="noopener">Open the App  &rarr;</a>
+    <div class="hint" id="openHint">Taking a while? Tap the button above.</div>
+  </div>
+
+  <iframe id="app-frame" allow="fullscreen; clipboard-write; camera; microphone" allowfullscreen></iframe>
+
+  <div id="installBanner">
+    <img src="icon-192.png" alt="ABC Marketing">
+    <div class="ib-text">
+      <div class="ib-title">Add to Home Screen</div>
+      <div class="ib-sub">Install ABC Marketing for quick access</div>
+    </div>
+    <button class="ib-install" onclick="triggerInstall()">Install</button>
+    <button class="ib-close"   onclick="dismissInstall()">✕</button>
+  </div>
+
+  <script>
+    var splash=document.getElementById('splash'), frame=document.getElementById('app-frame'),
+        openBtn=document.getElementById('openBtn'), openHint=document.getElementById('openHint');
+    function hideSplash(){ splash.style.opacity='0'; setTimeout(function(){ splash.style.display='none'; },600); }
+
+    frame.src = APP_URL; openBtn.href = APP_URL;
+    frame.onload = function(){ setTimeout(hideSplash, 800); };
+    setTimeout(hideSplash, 6000);
+    setTimeout(function(){ openBtn.style.display='inline-block'; openHint.style.display='block'; }, 4500);
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(e){console.warn('SW failed',e);}); });
+    }
+    var deferredPrompt;
+    window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); deferredPrompt=e; document.getElementById('installBanner').style.display='flex'; });
+    window.addEventListener('appinstalled', function(){ document.getElementById('installBanner').style.display='none'; deferredPrompt=null; });
+    function triggerInstall(){ if(!deferredPrompt) return; deferredPrompt.prompt(); deferredPrompt.userChoice.then(function(){ deferredPrompt=null; }); }
+    function dismissInstall(){ document.getElementById('installBanner').style.display='none'; }
+  </script>
+</body>
+</html>
